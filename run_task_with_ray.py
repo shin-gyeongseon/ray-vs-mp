@@ -13,7 +13,7 @@ from typing import Union, Any, Dict
 
 
 # Ray 클러스터에 연결
-ray.init(address="ray://localhost:10001")
+ray.init()
 
 # 성능 측정 결과를 저장할 데이터프레임
 results = []
@@ -26,7 +26,7 @@ def get_process_memory():
 
 
 # 이미지 처리 태스크 - 계산 집약적 작업
-@ray.remote(num_cpus=1)
+@ray.remote
 def process_image(image, complexity=1):
     # 가우시안 블러 시뮬레이션
     kernel_size = 5 * complexity
@@ -69,7 +69,7 @@ def run_ray_test(data_size_mb: int, num_tasks: int, complexity: int = 1) -> Dict
     img_size = int(np.sqrt((data_size_mb * 1024 * 1024) / (3 * num_tasks * 4)))
 
     # 테스트 이미지 생성
-    images = [np.random.randint(0, 256, (img_size//2, img_size//2, 3), dtype=np.uint8)
+    images = [np.random.randint(0, 256, (img_size, img_size, 3), dtype=np.uint8)
               for _ in range(num_tasks)]
 
     # 메모리 측정 시작
@@ -110,9 +110,9 @@ def run_ray_test(data_size_mb: int, num_tasks: int, complexity: int = 1) -> Dict
 # 다양한 조건으로 테스트 실행
 test_configs = [
     # 데이터 크기 테스트
-    {'data_size_mb': 10, 'num_tasks': 10, 'complexity': 1},
-    {'data_size_mb': 50, 'num_tasks': 10, 'complexity': 1},
     {'data_size_mb': 100, 'num_tasks': 10, 'complexity': 1},
+    {'data_size_mb': 100, 'num_tasks': 30, 'complexity': 1},
+    {'data_size_mb': 100, 'num_tasks': 50, 'complexity': 1},
 
     # 태스크 수 테스트
     # {'data_size_mb': 500, 'num_tasks': 20, 'complexity': 1},

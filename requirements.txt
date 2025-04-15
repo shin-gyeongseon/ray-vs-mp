@@ -11,7 +11,7 @@ idna==3.10
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 msgpack==1.1.0
-numpy~=1.26.4,
+numpy~=1.26.4
 packaging==24.2
 pandas==2.2.3
 protobuf==6.30.2
